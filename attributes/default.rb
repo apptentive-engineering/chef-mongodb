@@ -30,6 +30,7 @@ default[:mongodb][:shard_name] = "default"
 
 default[:mongodb][:auto_configure][:replicaset] = true
 default[:mongodb][:auto_configure][:sharding] = true
+default[:mongodb][:key_file] = nil
 
 default[:mongodb][:enable_rest] = false
 
