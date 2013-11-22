@@ -17,6 +17,16 @@ if node['mongodb']['replicaset_name'].nil? && node.mongodb.is_replicaset
   end
 end
 
+if node.recipe?("mongodb::mongos")
+  node.default['mongodb']['config']['configdb'] = search(
+    :node,
+    "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
+     recipes:mongodb\\:\\:configserver AND \
+     chef_environment:#{node.chef_environment}"
+  ).collect{|n| "#{(n['mongodb']['configserver_url'] || n['fqdn'])}:#{n['mongodb']['port']}" }.sort.join(",")
+  %w(dbpath nojournal rest smallfiles oplogSize replSet).each { |k| node.default['mongodb']['config'].delete(k) }
+end
+
 # just-in-case config file drop
 template node['mongodb']['dbconfig_file'] do
   cookbook node['mongodb']['template_cookbook']
