@@ -17,7 +17,10 @@ package node.mongodb.mms_agent.munin_package do
   only_if { node.mongodb.mms_agent.install_munin }
 end
 # python dependencies
-python_pip 'pymongo'
+python_pip 'pymongo' do
+  action :install
+end
+
 
 # download, and unzip if it's changed
 package 'unzip'
